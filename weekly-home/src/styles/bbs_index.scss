@@ -1,0 +1,26 @@
+.el-pager li.active  {
+  color: #5FB878;
+  cursor: default;
+}
+.el-dialog__header {
+  padding: 9px 20px 2px;
+  background: #eee;
+}
+.el-dialog__headerbtn{
+  top: 11px;
+}
+
+.el-input__inner{
+  height: 38px;
+  padding: 0px 15px;
+  border-radius: 0px;
+}
+.el-select .el-input.is-focus .el-input__inner{
+  border-color:#dcdfe6;
+}
+.el-select .el-input__inner:focus{
+  border-color:#dcdfe6;
+}
+.el-select-dropdown__item.selected{
+  color:#009688
+}

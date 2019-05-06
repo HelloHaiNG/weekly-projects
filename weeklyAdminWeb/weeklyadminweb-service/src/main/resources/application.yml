@@ -1,0 +1,79 @@
+server:
+  port: 8002
+
+spring:
+   application:
+     name: weeklyadminweb-service
+   redis:
+       host: localhost
+       port: 6379
+       jedis:
+         pool:
+           max-active: 1024
+           max-wait: -1s
+           max-idle: 200
+       password: 123456
+   datasource:
+         name: db_weekly
+         type: com.alibaba.druid.pool.DruidDataSource
+         druid:
+           driver-class-name: com.mysql.jdbc.Driver
+           url: jdbc:mysql://localhost:3306/db_weekly
+           username: root
+           password:
+           initial-size: 1
+           min-idle: 1
+           max-active: 20
+           max-wait: 60000
+           time-between-eviction-runs-millis: 60000
+           min-evictable-idle-time-millis: 300000
+           validation-query: SELECT 'x'
+           test-while-idle: true
+           test-on-borrow: false
+           test-on-return: false
+           pool-prepared-statements: false
+           max-pool-prepared-statement-per-connection-size: 20
+
+mybatis:
+    mapper-locations: mapper/*.xml
+    type-aliases-package: com.ucar.weeklyadminwebservice.entities
+
+pagehelper:
+  helper-dialect: mysql
+
+mapper:
+#  mappers: com.ucar.weeklyadminwebservice.base.GenericMapper
+  not-empty: false
+  identity: MYSQL
+
+feign:
+  hystrix:
+    enabled: true
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://weeklyEureka8000:8000/eureka/
+    healthcheck:
+      enabled : true
+  instance:
+      leaseRenewalIntervalInSeconds: 5
+      leaseExpirationDurationInSeconds: 15
+      prefer-ip-address: true
+      instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+      hostname: weeklyAdminWeb8002

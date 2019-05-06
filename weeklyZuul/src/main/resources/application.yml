@@ -1,0 +1,79 @@
+server:
+  port: 8005
+
+
+cache:
+  time:
+    token: 5
+
+spring:
+  application:
+    name: weeklyzuul-service
+  servlet:
+    multipart:
+      max-file-size: 100Mb
+      max-request-size: 100Mb
+  redis:
+    host: localhost
+    port: 6379
+    jedis:
+      pool:
+        max-active: 1024
+        max-wait: -1s
+        max-idle: 200
+    password: 123456
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://weeklyEureka8000:8000/eureka/
+    registry-fetch-interval-seconds: 5
+    healthcheck:
+      enabled: true
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 20
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+    hostname: weeklyZuul8005
+
+
+zuul:
+  ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
+  routes:
+    weekly-service:
+      path: /weeklyservice/**
+      serviceId: weekly-service
+
+    weeklyadminweb-service:
+      path: /weeklyadminweb/**
+      serviceId: weeklyadminweb-service
+
+    weeklyusercenter-service:
+      path: /weeklyusercenter/**
+      serviceId: weeklyusercenter-service
+
+    weeklycommon-service:
+      path: /weeklycommon/**
+      serviceId: weeklycommon-service
+#  ignored-patterns: /weeklyusercenter/login
+
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  eureka:
+    enabled: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 250000
